@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <ProjectGuid>{5BB54742-53DD-4C80-AD27-CBCE62188087}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug-2020</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
     <RootNamespace>SelectionMonitorCompilationCore</RootNamespace>
@@ -22,26 +22,76 @@
     <BaseInterMediateOutputPath>obj\</BaseInterMediateOutputPath>
     <InterMediateOutputPath>obj\Debug</InterMediateOutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug-2021'">
+    <RevitVersion>2021</RevitVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release-2021'">
+    <RevitVersion>2021</RevitVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug-2020'">
+      <RevitVersion>2020</RevitVersion>
+      <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release-2020'">
+      <RevitVersion>2020</RevitVersion>
+      <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug-2019'">
+      <RevitVersion>2019</RevitVersion>
+      <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release-2019'">
+      <RevitVersion>2019</RevitVersion>
+      <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug-2018'">
+      <RevitVersion>2018</RevitVersion>
+      <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release-2018'">
+      <RevitVersion>2018</RevitVersion>
+      <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug-2017'">
+      <RevitVersion>2017</RevitVersion>
+      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+      <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release-2017'">
+      <RevitVersion>2017</RevitVersion>
+      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyName>SelectionMonitorCompilationCore</AssemblyName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+  <PropertyGroup Condition="$(Configuration.StartsWith('Debug'))">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <WarningLevel>0</WarningLevel>
+    <DefineConstants>DEBUG;TRACE;Revit$(RevitVersion)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(ProgramW6432)\Autodesk\Revit $(RevitVersion)\Revit.exe</StartProgram>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+  <PropertyGroup Condition="$(Configuration.StartsWith('Release'))">
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <WarningLevel>0</WarningLevel>
+    <DefineConstants>TRACE;Revit$(RevitVersion)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(ProgramW6432)\Autodesk\Revit $(RevitVersion)\Revit.exe</StartProgram>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AdWindows">
-      <HintPath>..\..\..\..\Program Files\Autodesk\Revit 2020\AdWindows.dll</HintPath>
+      <HintPath>$(ProgramW6432)\Autodesk\Revit $(RevitVersion)\AdWindows.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore">
@@ -49,11 +99,11 @@
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="RevitAPI">
-      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
+      <HintPath>$(ProgramW6432)\Autodesk\Revit $(RevitVersion)\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIUI">
-      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
+      <HintPath>$(ProgramW6432)\Autodesk\Revit $(RevitVersion)\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -92,10 +142,14 @@
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <PropertyGroup>
-    <PostBuildEvent>if exist "C:\ProgramData\Autodesk\Revit\Addins\2020" copy "$(ProjectDir)*.addin" "C:\ProgramData\Autodesk\Revit\Addins\2020"
-if exist "C:\ProgramData\Autodesk\Revit\Addins\2020\$(SolutionName)" copy "$(ProjectDir)$(OutputPath)*.dll" "C:\ProgramData\Autodesk\Revit\Addins\2020\$(SolutionName)"</PostBuildEvent>
+    <PostBuildEvent>if exist "$(AppData)\Autodesk\Revit\Addins\$(RevitVersion)" copy "$(ProjectDir)*.addin" "$(AppData)\Autodesk\Revit\Addins\$(RevitVersion)"
+if exist "$(AppData)\Autodesk\Revit\Addins\$(RevitVersion)" copy "$(ProjectDir)$(OutputPath)*.dll" "$(AppData)\Autodesk\Revit\Addins\$(RevitVersion)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>if not exist "C:\ProgramData\Autodesk\Revit\Addins\2020\$(SolutionName)" mkdir "C:\ProgramData\Autodesk\Revit\Addins\2020\$(SolutionName)"</PreBuildEvent>
+    <PreBuildEvent>if not exist "C:\ProgramData\Autodesk\Revit\Addins\$(RevitVersion)" mkdir "C:\ProgramData\Autodesk\Revit\Addins\$(RevitVersion)"</PreBuildEvent>
   </PropertyGroup>
+  <Target Name="AfterClean">
+    <Delete Files="$(AppData)\Autodesk\REVIT\Addins\$(RevitVersion)\RvtForgify.addin" />
+    <Delete Files="$(AppData)\Autodesk\REVIT\Addins\$(RevitVersion)\RvtForgify.dll" />
+  </Target>
 </Project>
